@@ -3,5 +3,7 @@ public class BOJ_15234 {
         System.out.println("실행 테스트");
         System.out.println("실행 테스트");
         System.out.println("실행 테스트");
+        System.out.println("실행 테스트");
+        System.out.println("실행 테스트");
     }
 }
