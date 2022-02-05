@@ -17,21 +17,18 @@ public class BOJ_14888 {
 
         min = Integer.MAX_VALUE;
         max = Integer.MIN_VALUE;
-
-        copiedOperators = operatorInput.clone();
     }
 
     static int numOfNum, min, max, result;
-    static int[] numList, copiedOperators, operatorInput;
+    static int[] numList, operatorInput;
 
     static void solve_14888(int operatorSet[], int result, int  k) {
         if(k == numOfNum + 1){
             // 결과값에 따라 최대, 최소값 갱신. result 초기화
             if(result < min) min = result;
             if(result > max) max = result;
-//            for(int i = 1; i <= 4; i ++) System.out.println(copiedOperators[i]);
-//            for(int i = 1; i <= 4; i ++) System.out.println(operatorList[i]);
-//            System.out.println(operatorList);
+//          min = Math.min(min, result);
+//          max = Math.max(max, result);
         } else {
             int[] operatorList = operatorSet.clone();
             int resultValue = result;
@@ -48,14 +45,14 @@ public class BOJ_14888 {
                 }
                 solve_14888(operatorList, resultValue, k + 1);
                 resultValue = result;
-                operatorList = operatorSet.clone();
+                operatorList = operatorSet.clone(); // clone 할 필요 없이 그냥 --한 부분은 ++ 해줘도 됨.
+                // operatorList[operatorTurn] ++;
             }
         }
     }
     public static void main (String[] args){
         input_14888();
-        result = numList[1];
-        solve_14888(operatorInput, result, 2);
+        solve_14888(operatorInput, numList[1], 2);
 
         // 최대값, 최솟값 출력
         System.out.println((int)max);
