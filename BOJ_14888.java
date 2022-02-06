@@ -58,4 +58,5 @@ public class BOJ_14888 {
         System.out.println((int)max);
         System.out.println((int)min);
     }
+
 }
