@@ -4,46 +4,57 @@ import java.util.*;
 public class BOJ_2470 {
     static FastReader scan = new FastReader();
     static StringBuilder ansSet = new StringBuilder();
-    static int N, concentration = Integer.MAX_VALUE;
-    static int[] NList;
+
+    static int N;
+    static int[] A;
 
     static void input_2470(){
         N = scan.nextInt();
-        NList = new int[N + 1];
-        for(int i = 1; i <= N; i++) NList[i] = scan.nextInt();
-        Arrays.sort(NList, 1, N + 1);
+        A = new int[N + 1];
+        for(int i = 1; i <= N; i++) A[i] = scan.nextInt();
     }
 
-    static void getAns(int key, int[] List, int left, int right){
-        int st = List[left];
-        int count = Math.abs(List[left] + key);
-
-        while (left <= right){
-            int mid = (left + right) / 2;
-            if(Math.abs(List[mid] + key) < count){
-                count = Math.abs(List[mid] + key);
-                st = List[mid];
-                left = mid + 1;
+    static int getCandiate(int[] A, int L, int R, int X){
+        int res = R + 1;
+        while (L <= R) {
+            int mid = (L + R) / 2;
+            if (A[mid] >= X) {
+                res = mid;
+                R = mid - 1;
             } else {
-                right = mid - 1;
+                L = mid + 1;
             }
         }
-//        System.out.print(key);
-//        System.out.print(' ');
-//        System.out.print(count);
-//        System.out.print('\n');
-        if(Math.abs(count) < Math.abs(concentration)){
-            concentration = count;
-            ansSet.delete(0, 2);
-            ansSet.append(key).append(' ').append(st);
-        }
+        return res;
     }
 
     static void solve_2470(){
-        for(int i = 1; i <= N; i++){
-            getAns(NList[i], NList, 1, N);
-//            System.out.println(ansSet);
+        Arrays.sort(A, 1, N + 1);
+
+        int best_sum = Integer.MAX_VALUE;
+        int v1 = 0, v2 = 0;
+        for (int left = 1; left <= N - 1; left++) {
+            // A[left] 용액을 쓸 것이다. 고로 -A[left] 와 가장 가까운 용액을 자신의 오른쪽 구간에서 찾자.
+            int candidate = getCandiate(A, left + 1, N, -A[left]);
+
+            // A[candidate - 1] 와 A[candidate] 중에 A[left] 와 섞었을 때의 정보를 정답에 갱신시킨다.
+
+            // 1. A[left] + A[candidate - 1]
+            if (left < candidate - 1 && Math.abs(A[left] + A[candidate - 1]) < best_sum) {
+                best_sum = Math.abs(A[left] + A[candidate - 1]);
+                v1 = A[left];
+                v2 = A[candidate - 1];
+            }
+
+            // 2. A[left] + A[candidate]
+            if (candidate <= N && Math.abs(A[left] + A[candidate]) < best_sum) {
+                best_sum = Math.abs(A[left] + A[candidate]);
+                v1 = A[left];
+                v2 = A[candidate];
+            }
+
         }
+        ansSet.append(v1).append(' ').append(v2);
         System.out.println(ansSet);
     }
 
