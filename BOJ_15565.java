@@ -1,43 +1,39 @@
 import java.io.*;
 import java.util.*;
 
-public class BOJ_1654 {
+public class BOJ_15565 {
     static FastReader scan = new FastReader();
+    static int N, M;
+    static int[] NList;
 
-    static int K, N;
-    static int[] KList;
-
-    static void input_1654(){
-        K = scan.nextInt();
+    static void input_15565(){
         N = scan.nextInt();
-        KList = new int[K + 1];
-        for(int i = 1; i <= K; i++) KList[i] = scan.nextInt();
-        Arrays.sort(KList, 1, K + 1);
+        M = scan.nextInt();
+
+        NList = new int[N + 1];
+        for(int i = 1; i <= N; i++) NList[i] = scan.nextInt();
     }
-    static boolean determine(long m){
-        long cnt = 0;
-        for(int i = 1; i <= K; i++){
-            cnt += KList[i] / m;
-        }
-        return cnt >= N;
-    }
-    static void solve_1654(){
-        long L = 1, R = KList[K], bestLen = 0;
-        while (L <= R){
-            long mid = (L + R) / 2;
-            if(determine(mid)){
-                bestLen = mid;
-                L = mid + 1;
-            } else{
-                R = mid - 1;
+
+    static void solve_15565(){
+        int bestSize = Integer.MAX_VALUE, cnt = 0;
+
+        for(int L = 1, R = 0; L <= N; L++){
+            while (R < N && cnt < M){
+                R++;
+                if(NList[R] == 1) cnt++;
             }
+            if(R - L + 1 < bestSize && cnt == M) {
+                bestSize = R - L + 1;
+            }
+            if(NList[L] == 1) cnt--;
         }
-        System.out.println(bestLen);
+        if(bestSize == Integer.MAX_VALUE) bestSize = -1;
+        System.out.println(bestSize);
     }
 
     public static void main(String[] args) {
-        input_1654();
-        solve_1654();
+        input_15565();
+        solve_15565();
     }
 
     static class FastReader {

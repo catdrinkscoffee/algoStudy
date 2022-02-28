@@ -1,45 +1,59 @@
 import java.io.*;
 import java.util.*;
 
-public class BOJ_1654 {
+public class BOJ_11728 {
     static FastReader scan = new FastReader();
+    static StringBuilder ans = new StringBuilder();
+    static int N, M;
+    static int[] NList, MList, mergedList;
 
-    static int K, N;
-    static int[] KList;
-
-    static void input_1654(){
-        K = scan.nextInt();
+    static void input_11728(){
         N = scan.nextInt();
-        KList = new int[K + 1];
-        for(int i = 1; i <= K; i++) KList[i] = scan.nextInt();
-        Arrays.sort(KList, 1, K + 1);
+        M = scan.nextInt();
+
+        NList = new int[N + 1];
+        for(int i = 1; i <= N; i++) NList[i] = scan.nextInt();
+
+        MList = new int[M + 1];
+        for(int i = 1; i <= M; i++) MList[i] = scan.nextInt();
+
+        mergedList = new int[N + M + 1];
     }
-    static boolean determine(long m){
-        long cnt = 0;
-        for(int i = 1; i <= K; i++){
-            cnt += KList[i] / m;
+
+    static void solve_11728(){
+        int A = 1, B = 1, index = 1;
+        while (A <= N && B <= M){
+            if(NList[A] >= MList[B]){
+//                mergedList[index] = MList[B];
+                ans.append(MList[B]); ans.append(' ');
+                B++;
+            } else {
+//                mergedList[index] = MList[A];
+                ans.append(NList[A]); ans.append(' ');
+                A++;
+            }
+            index++;
         }
-        return cnt >= N;
-    }
-    static void solve_1654(){
-        long L = 1, R = KList[K], bestLen = 0;
-        while (L <= R){
-            long mid = (L + R) / 2;
-            if(determine(mid)){
-                bestLen = mid;
-                L = mid + 1;
-            } else{
-                R = mid - 1;
+        if(A > N){
+            while (B <= M){
+//                mergedList[index] = MList[B];
+                ans.append(MList[B]); ans.append(' ');
+                B++;
+            }
+        } else {
+            while (A <= N){
+//                mergedList[index] = MList[A];
+                ans.append(NList[A]); ans.append(' ');
+                A++;
             }
         }
-        System.out.println(bestLen);
+        System.out.println(ans.toString());
     }
 
     public static void main(String[] args) {
-        input_1654();
-        solve_1654();
+        input_11728();
+        solve_11728();
     }
-
     static class FastReader {
         BufferedReader br;
         StringTokenizer st;

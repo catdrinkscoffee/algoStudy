@@ -1,45 +1,38 @@
 import java.io.*;
 import java.util.*;
 
-public class BOJ_1654 {
+public class BOJ_13144_improved {
     static FastReader scan = new FastReader();
+    static int N;
+    static int[] NList, cnt;
 
-    static int K, N;
-    static int[] KList;
-
-    static void input_1654(){
-        K = scan.nextInt();
+    static void input_13144(){
         N = scan.nextInt();
-        KList = new int[K + 1];
-        for(int i = 1; i <= K; i++) KList[i] = scan.nextInt();
-        Arrays.sort(KList, 1, K + 1);
+        NList = new int[N + 1];
+        for(int i = 1; i <= N; i++) NList[i] = scan.nextInt();
+        cnt = new int[100000 + 1];
     }
-    static boolean determine(long m){
-        long cnt = 0;
-        for(int i = 1; i <= K; i++){
-            cnt += KList[i] / m;
-        }
-        return cnt >= N;
-    }
-    static void solve_1654(){
-        long L = 1, R = KList[K], bestLen = 0;
-        while (L <= R){
-            long mid = (L + R) / 2;
-            if(determine(mid)){
-                bestLen = mid;
-                L = mid + 1;
-            } else{
-                R = mid - 1;
+
+    static void solve_13144(){
+        long ans = 0;
+
+        for(int L = 1, R = 0; L <= N; L++){
+            while (R < N && cnt[NList[R + 1]] == 0){
+                R++;
+                cnt[NList[R]]++;
             }
+            ans += R - L + 1;
+
+            cnt[NList[L]]--;
         }
-        System.out.println(bestLen);
+
+        System.out.println(ans);
     }
 
     public static void main(String[] args) {
-        input_1654();
-        solve_1654();
+        input_13144();
+        solve_13144();
     }
-
     static class FastReader {
         BufferedReader br;
         StringTokenizer st;
@@ -86,3 +79,4 @@ public class BOJ_1654 {
         }
     }
 }
+
