@@ -1,50 +1,52 @@
 import java.io.*;
 import java.util.*;
 
-public class BOJ_2343 {
+public class BOJ_1061 {
     static FastReader scan = new FastReader();
-    static int N, M;
-    static int[] NList;
 
-    static void input_2343(){
-        N = scan.nextInt();
-        M = scan.nextInt();
+    static int n, root, erased;
+    static ArrayList<Integer>[] child;
+    static int[] leaf;
 
-        NList = new int[N + 1];
-        for(int i = 1; i <= N; i++) NList[i] = scan.nextInt();
+    static void input(){
+        n = scan.nextInt();
+        child = new ArrayList[n];
+        leaf = new int[n];
+        for(int i = 0; i < n; i++) child[i] = new ArrayList<>();
+        for(int i = 0; i < n; i++){
+            int par = scan.nextInt();
+            if(par == -1){
+                root = i;
+                continue;
+            }
+            child[par].add(i);
+        }
+        erased = scan.nextInt();
     }
 
-    static boolean determine(int len){
-        int cnt = 1, sum = 0;
-        for(int i = 1; i <= N; i++){
-            if(sum + NList[i] > len){
-                cnt++;
-                sum = NList[i];
-            } else {
-                sum += NList[i];
-            }
+    static void dfs(int x){
+        if(child[x].isEmpty()){
+            leaf[x] = 1;
         }
-        return M >= cnt;
+        for(int y: child[x]){
+            dfs(y);
+            leaf[x] += leaf[y];
+        }
     }
 
-    static void solve_2343(){
-        int L = 1, R = 1000000000, ans = 0;
-        for (int i = 1; i <= N; i++) L = Math.max(L, NList[i]);
-        while (L <= R){
-            int mid = (L + R) / 2;
-            if(determine(mid)){
-                ans = mid;
-                R = mid - 1;
-            } else {
-                L = mid + 1;
+    static void solve(){
+        for(int i = 0; i < n; i++){
+            if(child[i].contains(erased)){
+                child[i].remove(child[i].indexOf(erased));
             }
         }
-        System.out.println(ans);
+        if(root != erased) dfs(root);
+        System.out.println(leaf[root]);
     }
 
     public static void main(String[] args) {
-        input_2343();
-        solve_2343();
+        input();
+        solve();
     }
     static class FastReader {
         BufferedReader br;

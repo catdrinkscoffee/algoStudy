@@ -1,50 +1,42 @@
 import java.io.*;
 import java.util.*;
 
-public class BOJ_2343 {
+public class BOJ_11725 {
     static FastReader scan = new FastReader();
-    static int N, M;
-    static int[] NList;
+    static StringBuilder ans = new StringBuilder();
 
-    static void input_2343(){
-        N = scan.nextInt();
-        M = scan.nextInt();
+    static int n;
+    static ArrayList<Integer>[] adj;
+    static int[] parent;
 
-        NList = new int[N + 1];
-        for(int i = 1; i <= N; i++) NList[i] = scan.nextInt();
+    static void input(){
+        n = scan.nextInt();
+        adj = new ArrayList[n + 1];
+        parent = new int[n + 1];
+        for(int i = 1; i <= n; i++) adj[i] = new ArrayList<>();
+        for(int i = 1; i < n; i++){
+            int x = scan.nextInt(), y = scan.nextInt();
+            adj[x].add(y);
+            adj[y].add(x);
+        }
+    }
+    static void dfs(int x, int par){
+        for(int y: adj[x]){
+            if(y == par) continue;
+            parent[y] = x;
+            dfs(y, x);
+        }
     }
 
-    static boolean determine(int len){
-        int cnt = 1, sum = 0;
-        for(int i = 1; i <= N; i++){
-            if(sum + NList[i] > len){
-                cnt++;
-                sum = NList[i];
-            } else {
-                sum += NList[i];
-            }
-        }
-        return M >= cnt;
-    }
-
-    static void solve_2343(){
-        int L = 1, R = 1000000000, ans = 0;
-        for (int i = 1; i <= N; i++) L = Math.max(L, NList[i]);
-        while (L <= R){
-            int mid = (L + R) / 2;
-            if(determine(mid)){
-                ans = mid;
-                R = mid - 1;
-            } else {
-                L = mid + 1;
-            }
-        }
+    static void solve(){
+        dfs(1, -1);
+        for(int i = 2; i <=n;i++) ans.append(parent[i]).append('\n');
         System.out.println(ans);
     }
 
     public static void main(String[] args) {
-        input_2343();
-        solve_2343();
+        input();
+        solve();
     }
     static class FastReader {
         BufferedReader br;
