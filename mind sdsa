@@ -30,11 +30,14 @@ void solve()
 		dp[n][0] = dp[n - 1][2] + A * datas[n].first * datas[n].second;
 		unsigned min = UINT32_MAX;
 		unsigned sum = 0;
-		for (int j = n; j > 0; j--)
+		for (int j = n; j >= 1; j--)
 		{
 			sum += datas[j - 1].first * datas[j - 1].second * datas[n].second;
-			int tmp = sum + dp[j - 1][2];
-			min = (tmp < min) ? min : tmp;
+			if (j >= 2)
+			{
+				int tmp = sum + dp[j - 2][2];
+				min = (tmp < min) ? min : tmp;
+			}
 		}
 		sum += A * B * datas[n].second;
 		min = (sum < min) ? min : sum;
