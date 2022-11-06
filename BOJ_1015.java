@@ -1,83 +1,53 @@
-import java.io.*;
-import java.util.*;
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <limits.h>
 
-public class BOJ_1015 {
-    static FastReader scan = new FastReader();
-    static StringBuilder ansSet = new StringBuilder();
+int N, A, B;
+std::vector<std::pair<int, int>> datas;
 
-    static int NFor1015;
-    static int[] NListFor1015, copiedNList;
+void input()
+{
+	std::cin >> N;
+	datas.reserve(N);
+	std::cin >> A >> B;
+	for (int n = 1; n < N; n++)
+	{
+		int a, b;
+		std::cin >> a >> b;
+		datas.push_back(std::make_pair( a, b ));
+	}
+}
+unsigned dp[505][3]{ 0 };
+void solve()
+{
+	dp[0][0] = A * B * datas[0].second;
+	dp[0][1] = A * B * datas[0].second;
+	dp[0][2] = A * B * datas[0].second;
 
-    static void input_1015 (){
-        NFor1015 = scan.nextInt();
-        NListFor1015 = new int[NFor1015 + 1];
-        copiedNList = new int[NFor1015 + 1];
+	for (int n = 1; n <= N - 2; n++)
+	{
+		dp[n][0] = dp[n - 1][2] + A * datas[n].first * datas[n].second;
+		unsigned min = UINT32_MAX;
+		unsigned sum = 0;
+		for (int j = n; j > 0; j--)
+		{
+			sum += datas[j - 1].first * datas[j - 1].second * datas[n].second;
+			int tmp = sum + dp[j - 1][2];
+			min = (tmp < min) ? min : tmp;
+		}
+		sum += A * B * datas[n].second;
+		min = (sum < min) ? min : sum;
 
-        for(int i = 1; i <= NFor1015; i++) NListFor1015[i] = scan.nextInt();
+		dp[n][1] = min;
+		dp[n][2] = std::min(dp[n][0], dp[n][1]);
+	}
 
-        copiedNList = NListFor1015.clone();
-    }
+	std::cout << dp[N - 2][2];
+}
 
-    static void solve_1015(){
-        Arrays.sort(NListFor1015);
-        for(int orderChk = 1; orderChk < NListFor1015.length; orderChk++){
-            for(int traveler = 1; traveler < NListFor1015.length; traveler++){
-                if(copiedNList[orderChk] == NListFor1015[traveler]) {
-                    ansSet.append(traveler - 1).append(' ');
-                    NListFor1015[traveler] = -1;
-                    break;
-                }
-            }
-        }
-        System.out.println(ansSet.toString());
-    }
-    public static void main(String[] args) {
-        input_1015();
-        solve_1015();
-    }
-    static class FastReader {
-        BufferedReader br;
-        StringTokenizer st;
-
-        public FastReader() {
-            br = new BufferedReader(new InputStreamReader(System.in));
-        }
-
-        public FastReader(String s) throws FileNotFoundException {
-            br = new BufferedReader(new FileReader(new File(s)));
-        }
-
-        String next() {
-            while (st == null || !st.hasMoreElements()) {
-                try {
-                    st = new StringTokenizer(br.readLine());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            return st.nextToken();
-        }
-
-        int nextInt() {
-            return Integer.parseInt(next());
-        }
-
-        long nextLong() {
-            return Long.parseLong(next());
-        }
-
-        double nextDouble() {
-            return Double.parseDouble(next());
-        }
-
-        String nextLine() {
-            String str = "";
-            try {
-                str = br.readLine();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return str;
-        }
-    }
+int main()
+{
+	input();
+	return 0;
 }
